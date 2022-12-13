@@ -1,0 +1,81 @@
+<h1>Compound Interest Calculator</h1>
+<hr>
+<div class="card rounded bg-light">
+    <form [formGroup]="inputForm" (ngSubmit)="onChange()">
+        <div class="row mb-4 mt-4 ms-2">
+            <label for="initialPrincipal" class="col-sm-2 col-form-label-xs">Initial investment:</label>
+            <div class="col-sm-4">
+                <input id="initialPrincipal" class="form-control-xs w-50" type="number" formControlName="initialPrincipal" (change)="onChange()">
+            </div>
+            <label for="monthlyContribution" class="col-sm-2 col-form-label-xs">Monthly contribution:</label>
+            <div class="col-sm-4">
+                <input id="monthlyContribution" class="form-control-xs  w-50" type="number" formControlName="monthlyContribution" (change)="onChange()">
+            </div>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="yearsToGrow" class="col-sm-2 col-form-label-xs">Years to grow:</label>
+            <div class="col-sm-4">
+                <input id="yearsToGrow" class="form-control-xs w-25" type="number" formControlName="yearsToGrow" (change)="onChange()">
+            </div>
+            <label for="interestRate" class="col-sm-2 col-form-label-xs">Interest rate:</label>
+            <div class="col-sm-4">
+                <input id="interestRate" class="form-control-xs w-25" type="number" formControlName="interestRate" (change)="onChange()">
+            </div>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="compoundFreq" class="col-sm-2 col-form-label-xs">Compound frequency: </label>
+            <div class="col-sm-4">
+                <select class="form-control-xs" style="height: 32px" formControlName="compoundFreq"  (change)="onChange()">
+                    <option [ngValue]="null" disabled>Select frequency</option>
+                    <option *ngFor="let freq of compoundFreqList" [ngValue]="freq.id">{{freq.name}}</option>
+                </select>
+            </div>
+        </div>
+        <!-- button type="button" (click)="onChange()">Refresh</button--->
+    </form>
+</div>
+<hr>
+<div class="container">
+
+
+    <!--p>Form Value: {{ inputForm.value | json }}</p>
+    
+    <p>Form Status: {{ inputForm.status }}</p-->
+
+
+    <div class="row">
+        <div class="col-md-12 mx-auto">
+            <h4>Your future balance is {{ futureBalance }}.</h4>
+        </div>
+    </div>
+
+    <div class="row mb-4" style="height: 400px">
+        <canvas baseChart class="chart"
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [plugins]="barChartPlugins"
+            [type]="barChartType">
+        </canvas>
+    </div>
+
+
+</div>
+<hr>
+<div class="container">
+
+    <table class="table table-striped">
+        <thead>
+        <tr>           
+            <th>Years</th>
+            <th>Future Value ({{ inputForm.value.interestRate }}%)</th>
+            <th>Total Contributions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of tableDataRows">           
+            <td *ngFor="let col of row | key">{{row[col]}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
