@@ -1,0 +1,5 @@
+<div class="choose-quantity row" style="width: 250px">
+    <button class="col-sm btn-block" (click)="onRemove()" color="primary">-</button>
+    <input class="col-sm col-10" type="string" [value]="quantityStr" (change)="changeInput($event)" style="width: 170px">
+    <button class="col-sm btn-block" (click)="onAdd()" color="primary">+</button>
+ </div>

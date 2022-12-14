@@ -68,12 +68,12 @@ export class CompoundInterestComponent {
   public tableDataRows: any[] = [];
   
   compoundFreqList = [
-    { id: 1, name: "Annually" },
-    { id: 2, name: "Semiannually" },
-    { id: 4, name: "Quarterly" },
-    { id: 6, name: "Bimonthly" },
-    { id: 12, name: "Monthly" },
-    { id: 360, name: "Daily" }
+    { id: "1", name: "Annually" },
+    { id: "2", name: "Semiannually" },
+    { id: "4", name: "Quarterly" },
+    { id: "6", name: "Bimonthly" },
+    { id: "12", name: "Monthly" },
+    { id: "360", name: "Daily" }
   ];
 
   public futureBalance: string = "$0.00";
@@ -89,23 +89,23 @@ export class CompoundInterestComponent {
           this.route.queryParamMap
             .subscribe((paramsMap: any) => {
 
-              let initial = Number(paramsMap.params["initial"]);
-              let monthly = Number(paramsMap.params["monthly"]);
-              let years = Number(paramsMap.params["years"]);
-              let rate = Number(paramsMap.params["rate"]);
-              let freq = Number(paramsMap.params["freq"]);
+              let initial = paramsMap.params["initial"];
+              let monthly = paramsMap.params["monthly"];
+              let years = paramsMap.params["years"];
+              let rate = paramsMap.params["rate"];
+              let freq = paramsMap.params["freq"];
 
-              const getValue = (num: number, def: Number) => {
-                if (isNaN(num)) return def;
-                return num;
+              const getValue = (val: string, def: string) => {
+                if (!val) return def;
+                return val;
               };
 
               this.inputForm = this.fb.group({
-                initialPrincipal: [getValue(initial, 0), Validators.required],
-                monthlyContribution: [getValue(monthly, 1000)],
-                yearsToGrow: [getValue(years, 10)],
-                interestRate: [getValue(rate, 8)],
-                compoundFreq: [getValue(freq, 360)]
+                initialPrincipal: [getValue(initial, "$10,000"), Validators.required],
+                monthlyContribution: [getValue(monthly, "$1,000")],
+                yearsToGrow: [getValue(years, "10")],
+                interestRate: [getValue(rate, "8")],
+                compoundFreq: [getValue(freq, "360")]
               });
 
               this.onChange()
@@ -118,14 +118,25 @@ export class CompoundInterestComponent {
 
   }
 
+  parseToNumber(quantityStr: string): number {
+    var num = Number(quantityStr.replace(/[^0-9.-]+/g,""));
+    return num;
+  }
+
   onChange() {
     // TODO: Use EventEmitter with form value
     console.warn(this.inputForm.value);
     let input = this.inputForm.value;
+    let principal = this.parseToNumber(input.initialPrincipal);
+    let monthly = this.parseToNumber(input.monthlyContribution);
+    let years = this.parseToNumber(input.yearsToGrow);
+    let rate = this.parseToNumber(input.interestRate);
+    let freq = this.parseToNumber(input.compoundFreq);
+  
 
     this.barChartData.labels = this.calcLabels(input.yearsToGrow as number);
-    this.barChartData.datasets = this.calcResultsets(input.initialPrincipal!, input.monthlyContribution!, 
-      input.yearsToGrow!, input.interestRate!, input.compoundFreq!);
+    this.barChartData.datasets = this.calcResultsets(principal, monthly, 
+      years, rate, freq);
   
     this.generateTableData();
     this.chart?.update();

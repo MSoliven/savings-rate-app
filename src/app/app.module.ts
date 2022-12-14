@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { CompoundInterestComponent } from './calculators/compound-interest/compound-interest.component';
 import { KeyPipe } from './key.pipe';
 import { CurrencyPipe } from '@angular/common';
+import { ChooseQuantityComponent } from './form-controls/choose-quantity/choose-quantity.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CompoundInterestComponent,
-    KeyPipe
+    KeyPipe,
+    ChooseQuantityComponent
   ],
   imports: [
     BrowserModule,
