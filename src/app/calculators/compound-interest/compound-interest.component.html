@@ -18,18 +18,18 @@
             <label for="yearsToGrow" class="col-sm-2 col-form-label-xs">Years to grow:</label>
             <div class="col-sm-4">
                 <!--input id="yearsToGrow" class="form-control-xs w-25" type="number" formControlName="yearsToGrow" (change)="onChange()"-->
-                <choose-quantity id="yearsToGrow" class="form-control-xs w-50" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
+                <choose-quantity id="yearsToGrow" class="form-control-xs w-50" minValue="0" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
             </div>
             <label for="interestRate" class="col-sm-2 col-form-label-xs">Interest rate:</label>
             <div class="col-sm-4">
                 <!--input id="interestRate" class="form-control-xs w-25" type="number" formControlName="interestRate" (change)="onChange()"-->
-                <choose-quantity id="interestRate" class="form-control-xs w-50" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
+                <choose-quantity id="interestRate" class="form-control-xs w-50" minValue="0" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
             </div>
         </div>
         <div class="row mb-4 ms-2">
             <label for="compoundFreq" class="col-sm-2 col-form-label-xs">Compound frequency: </label>
             <div class="col-sm-4">
-                <select class="form-control-xs" style="height: 32px" formControlName="compoundFreq"  (change)="onChange()">
+                <select class="form-control-xs ms-n6" style="height: 32px; margin-left: -11px" formControlName="compoundFreq"  (change)="onChange()">
                     <option [ngValue]="null" disabled>Select frequency</option>
                     <option *ngFor="let freq of compoundFreqList" [ngValue]="freq.id">{{freq.name}}</option>
                 </select>

@@ -32,13 +32,12 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
   @Input()
   currency: string = "";
 
+  @Input()
+  minValue: string = "";
+
   changeInput(e: any) {
-    if (this.currency) {
-      this.quantityStr = this.currency + e.target.value; 
-    }
-    else {
-      this.quantityStr = e.target.value; 
-    }
+      this.quantityStr = this.formatNumber(this.parseToNumber(e.target.value), Number(this.decimals)); 
+      this.onChange(this.quantityStr);
   } 
 
   onChange = (quantityStr: string) => {
@@ -63,8 +62,8 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
 
   onRemove() {
     this.markAsTouched();
-    if (!this.disabled) {
-      var num = Number(this.quantityStr.replace(/[^0-9.-]+/g,""));
+    var num = Number(this.quantityStr.replace(/[^0-9.-]+/g,""));
+    if (!this.disabled && (this.minValue == "" || num > Number(this.minValue))) {
       num -= Number(this.increment);
       this.quantityStr = this.formatNumber(num, Number(this.decimals));
       this.onChange(this.quantityStr);
@@ -100,14 +99,17 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
   }
 
   formatNumber(num: number, dec: number): string {
-    return this.currency + num.toLocaleString("en-US", {minimumFractionDigits: dec, maximumFractionDigits: dec});
+    if (this.currency) {
+      return this.currency + num.toLocaleString("en-US", {minimumFractionDigits: dec, maximumFractionDigits: dec});
+    }
+    return num.toLocaleString("en-US", {minimumFractionDigits: dec, maximumFractionDigits: dec});
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
     const num = this.parseToNumber(control.value);
-    if (num <= 0) {
+    if (this.minValue != "" && num < Number(this.minValue)) {
       return {
-        mustBePositive: {
+        lessThanMinimum: {
           num
         }
       };
