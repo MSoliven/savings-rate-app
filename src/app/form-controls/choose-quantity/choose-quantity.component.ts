@@ -22,6 +22,7 @@ import { AbstractControl, ControlValueAccessor, Validators, Validator, Validatio
 export class ChooseQuantityComponent implements ControlValueAccessor, Validator {
 
   quantityStr: string = "$";
+  readOnly: boolean = false;
 
   @Input()
   increment: string = "1";
@@ -34,6 +35,16 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
 
   @Input()
   minValue: string = "";
+
+  @Input()
+  tabindex: string = "";
+
+  @Input()
+  isReadOnly: string = "false";
+
+  ngOnInit(): void {
+    this.readOnly = this.isReadOnly === "true";
+  }
 
   changeInput(e: any) {
       this.quantityStr = this.formatNumber(this.parseToNumber(e.target.value), Number(this.decimals)); 

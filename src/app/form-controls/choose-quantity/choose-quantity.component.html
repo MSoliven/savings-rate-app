@@ -1,5 +1,8 @@
-<div class="choose-quantity row" style="width: 250px">
-    <button class="col-sm btn-block" (click)="onRemove()" color="primary">-</button>
-    <input class="col-sm col-10" type="string" [value]="quantityStr" (change)="changeInput($event)" style="width: 170px">
-    <button class="col-sm btn-block" (click)="onAdd()" color="primary">+</button>
+<div class="choose-quantity row" style="width: 220px">
+    <button *ngIf="!readOnly" class="col-sm col-1 btn-block rounded-0" (click)="onRemove()" color="primary">-</button>
+    <input  *ngIf="!readOnly" class="col-sm col-10" [readonly]="readOnly" type="string" onlyNumber="true" tabindex="{{ tabindex }}" [value]="quantityStr" (change)="changeInput($event)" style="width: 150px">
+    <div  *ngIf="readOnly" class="col-sm col-10" style="width: 150px">
+        {{ quantityStr }}
+    </div>
+    <button *ngIf="!readOnly" class="col-sm col-1 btn-block rounded-0" (click)="onAdd()" color="primary">+</button>
  </div>

@@ -9,6 +9,7 @@ import { CompoundInterestComponent } from './calculators/compound-interest/compo
 import { KeyPipe } from './key.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { ChooseQuantityComponent } from './form-controls/choose-quantity/choose-quantity.component';
+import { OnlyNumberDirective } from './directives/only-number.directive';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ChooseQuantityComponent } from './form-controls/choose-quantity/choose-
     AppComponent,
     CompoundInterestComponent,
     KeyPipe,
-    ChooseQuantityComponent
+    ChooseQuantityComponent,
+    OnlyNumberDirective
   ],
   imports: [
     BrowserModule,

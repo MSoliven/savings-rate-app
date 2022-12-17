@@ -7,6 +7,7 @@ import { Chart, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'cha
 import { BaseChartDirective } from 'ng2-charts';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { CurrencyPipe } from '@angular/common';
+import { trigger } from '@angular/animations';
 
 class TableDataRow {
   public year: string;
@@ -66,7 +67,12 @@ export class CompoundInterestComponent {
   };
 
   public tableDataRows: any[] = [];
+  public showTable: boolean = false;
+  public disableTable: boolean = true;
+
+  public readOnly: boolean = false;
   
+
   compoundFreqList = [
     { id: "1", name: "Annually" },
     { id: "2", name: "Semiannually" },
@@ -94,21 +100,37 @@ export class CompoundInterestComponent {
               let years = paramsMap.params["years"];
               let rate = paramsMap.params["rate"];
               let freq = paramsMap.params["freq"];
-
-              const getValue = (val: string, def: string) => {
+       
+              const getValue = (val: string, def: any) => {
                 if (!val) return def;
                 return val;
               };
 
               this.inputForm = this.fb.group({
-                initialPrincipal: [getValue(initial, "$10,000"), Validators.required],
-                monthlyContribution: [getValue(monthly, "$1,000")],
-                yearsToGrow: [getValue(years, "10")],
-                interestRate: [getValue(rate, "8")],
-                compoundFreq: [getValue(freq, "360")]
+                initialPrincipal: [getValue(initial, "$1,000.00"), Validators.required],
+                monthlyContribution: [getValue(monthly, "$500.00")],
+                yearsToGrow: [getValue(years, "30")],
+                interestRate: [getValue(rate, "9.9769102")],
+                compoundFreq: [getValue(freq, "1")]
               });
 
-              this.onChange()
+              this.onChange();
+
+              let viewmode = getValue(paramsMap.params["viewmode"], "default") as string;
+
+              switch(viewmode.toLowerCase()) {
+                case "readonly":
+                  this.readOnly = true;
+                  this.disableTable = false;
+                  break;
+                case "readonlychart":
+                  this.readOnly = true;
+                  this.disableTable = true;
+                  break;
+                default:
+                  this.readOnly = false;
+                  this.disableTable = false;
+              }
             }
         );
         }
@@ -132,14 +154,13 @@ export class CompoundInterestComponent {
     let years = this.parseToNumber(input.yearsToGrow);
     let rate = this.parseToNumber(input.interestRate);
     let freq = this.parseToNumber(input.compoundFreq);
-  
 
     this.barChartData.labels = this.calcLabels(input.yearsToGrow as number);
     this.barChartData.datasets = this.calcResultsets(principal, monthly, 
       years, rate, freq);
   
-    this.generateTableData();
     this.chart?.update();
+    this.showTable = false;
   }
 
   calcLabels(yearsToGrow: number) : string[] {
@@ -159,6 +180,14 @@ export class CompoundInterestComponent {
   transformAmount(element: any){
     this.formattedAmount = this.currencyPipe.transform(this.formattedAmount, '$') as string;
     element.target.value = this.formattedAmount;
+  }
+
+  getCompoundFreqDesc(id: any): string {
+    for (let i=0; i < this.compoundFreqList.length; i++) {
+      if (this.compoundFreqList[i].id == id) 
+        return this.compoundFreqList[i].name;
+    }
+    return "";
   }
 
   calcResultsets(initialPrincipal: number, monthlyContribution: number, yearsToGrow: number, 
@@ -256,11 +285,9 @@ export class CompoundInterestComponent {
       }];
   }
 
-  generateTableData() {
+  generateAndShowTable() {
     
     this.tableDataRows = [];
-
-
 
     for(let i=0; i < this.barChartData.labels!.length; i++) {
       this.tableDataRows.push(new TableDataRow(
@@ -269,6 +296,7 @@ export class CompoundInterestComponent {
         this.formatNumber(this.barChartData.datasets[1].data[i] as number)
       ))
     }
-  }
 
+    this.showTable = true;
+  }
 }

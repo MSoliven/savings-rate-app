@@ -1,43 +1,85 @@
-<h1>Compound Interest Calculator</h1>
-<hr>
-<div class="card rounded bg-light">
-    <form [formGroup]="inputForm" (ngSubmit)="onChange()">
-        <div class="row mb-4 mt-4 ms-2">
-            <label for="initialPrincipal" class="col-sm-2 col-form-label-xs">Initial investment:</label>
-            <div class="col-sm-4">
-                <!--input id="initialPrincipal" class="form-control-xs w-50" type="number" formControlName="initialPrincipal" (change)="onChange()"-->
-                <choose-quantity id="initialPrincipal" class="form-control-xs w-50" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
-            </div>
-            <label for="monthlyContribution" class="col-sm-2 col-form-label-xs">Monthly contribution:</label>
-            <div class="col-sm-4">
-                <!--input id="monthlyContribution" class="form-control-xs  w-50" type="number" formControlName="monthlyContribution" (change)="onChange()"-->
-                <choose-quantity id="monthlyContribution" class="form-control-xs w-50" increment="100" decimals="2" currency="$" formControlName="monthlyContribution" (change)="onChange()"></choose-quantity>
-            </div>
-        </div>
-        <div class="row mb-4 ms-2">
-            <label for="yearsToGrow" class="col-sm-2 col-form-label-xs">Years to grow:</label>
-            <div class="col-sm-4">
-                <!--input id="yearsToGrow" class="form-control-xs w-25" type="number" formControlName="yearsToGrow" (change)="onChange()"-->
-                <choose-quantity id="yearsToGrow" class="form-control-xs w-50" minValue="0" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
-            </div>
-            <label for="interestRate" class="col-sm-2 col-form-label-xs">Interest rate:</label>
-            <div class="col-sm-4">
-                <!--input id="interestRate" class="form-control-xs w-25" type="number" formControlName="interestRate" (change)="onChange()"-->
-                <choose-quantity id="interestRate" class="form-control-xs w-50" minValue="0" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
+<form [formGroup]="inputForm" (ngSubmit)="onChange()">
+    <div  *ngIf="!readOnly">
+        <h1>Compound Interest Calculator</h1>
+        <hr>
+        Adjust any of the parameters below and observe how it affects your savings over time.
+        <br><br>
+        <div class="card rounded bg-light">
+            <div class="row mb-4 mt-4 ms-2">
+                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs h5">Initial investment:</label>
+                <div class="col-sm-6">
+                    <choose-quantity id="initialPrincipal" tabindex="1" class="form-control-xs w-50" minValue="0" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
+                </div>
+                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The amount of money you want to invest initially.</label>
             </div>
         </div>
-        <div class="row mb-4 ms-2">
-            <label for="compoundFreq" class="col-sm-2 col-form-label-xs">Compound frequency: </label>
-            <div class="col-sm-4">
-                <select class="form-control-xs ms-n6" style="height: 32px; margin-left: -11px" formControlName="compoundFreq"  (change)="onChange()">
-                    <option [ngValue]="null" disabled>Select frequency</option>
-                    <option *ngFor="let freq of compoundFreqList" [ngValue]="freq.id">{{freq.name}}</option>
-                </select>
+        <hr>
+        <div class="card rounded bg-light">
+            <div class="row mb-4 mt-4 ms-2">
+                <label for="monthlyContribution" class="col-sm-6 col-form-label-xs h5">Monthly contribution:</label>
+                <div class="col-sm-6">
+                    <choose-quantity id="monthlyContribution" tabindex="2" class="form-control-xs w-50" increment="100" decimals="2" currency="$" formControlName="monthlyContribution" (change)="onChange()"></choose-quantity>
+                </div>
+                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The mount you plan to add to the principal monthly, or a negative number if you plan to withdraw.</label>
+            </div>
+            <div class="row mb-4 ms-2">
+                <label for="yearsToGrow" class="col-sm-6 col-form-label-xs h5">Years to grow:</label>
+                <div class="col-sm-6">
+                    <choose-quantity id="yearsToGrow" tabindex="3" class="form-control-xs w-50" minValue="0" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
+                </div>
+                <label for="yearsToGrow" class="col-sm-6 col-form-label-xs small">The number of years you plan to save.</label>
             </div>
         </div>
-        <!-- button type="button" (click)="onChange()">Refresh</button--->
-    </form>
-</div>
+        <hr>
+        <div class="card rounded bg-light">
+            <div class="row mb-4 mt-4 ms-2">
+                <label for="interestRate" class="col-sm-6 col-form-label-xs h5">Interest rate:</label>
+                <div class="col-sm-6">
+                    <choose-quantity id="interestRate" tabindex="4" class="form-control-xs w-50" minValue="0" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
+                </div>
+                <label for="interestRate" class="col-sm-6 col-form-label-xs small">Estimated annual interest rate. Historically, the stock market has returned over 10%.</label>
+            </div>
+            <div class="row mb-4 ms-2">
+                <label for="compoundFreq" class="col-sm-6 col-form-label-xs h5">Compound frequency: </label>
+                <div class="col-sm-6">
+                    <select tabindex="5" class="form-control-xs ms-n6" style="height: 32px; margin-left: -11px" formControlName="compoundFreq"  (change)="onChange()">
+                        <option [ngValue]="null" disabled>Select frequency</option>
+                        <option *ngFor="let freq of compoundFreqList" [ngValue]="freq.id">{{freq.name}}</option>
+                    </select>
+                </div>
+                <label for="compoundFreq" class="col-sm-6 col-form-label-xs small">Times per year interest will be compounded.</label>
+            </div>
+        </div>
+    </div>
+    <div  *ngIf="readOnly">
+        <div class="row mb-2 mt-4 ms-2">
+            <label for="initialPrincipal" class="col-sm-3 col-form-label-xs h6">Initial investment:</label>
+            <div class="col-sm-3">
+                <choose-quantity id="initialPrincipal" isReadOnly="true" tabindex="1" class="form-control-xs w-50" minValue="0" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
+            </div>
+            <label for="monthlyContribution" class="col-sm-3 col-form-label-xs h6">Monthly contribution:</label>
+            <div class="col-sm-3">
+                <choose-quantity id="monthlyContribution" isReadOnly="true" tabindex="2" class="form-control-xs w-50" increment="100" decimals="2" currency="$" formControlName="monthlyContribution" (change)="onChange()"></choose-quantity>
+            </div>
+        </div>
+        <div class="row mb-2 ms-2">
+            <label for="yearsToGrow" class="col-sm-3 col-form-label-xs h6">Years to grow:</label>
+            <div class="col-sm-3">
+                <choose-quantity id="yearsToGrow" isReadOnly="true" tabindex="3" class="form-control-xs w-50" minValue="0" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
+            </div>
+            <label for="interestRate" class="col-sm-3 col-form-label-xs h6">Interest rate:</label>
+            <div class="col-sm-3">
+                <choose-quantity id="interestRate" isReadOnly="true" tabindex="4" class="form-control-xs w-50" minValue="0" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
+            </div>
+        </div>
+        <div class="row mb-2 ms-2">
+            <label for="compoundFreq" class="col-sm-3 col-form-label-xs h6">Compound frequency: </label>
+            <div class="col-sm-3">
+                {{ getCompoundFreqDesc(inputForm.value.compoundFreq) }}
+            </div>
+        </div>
+    </div>
+</form>
 <hr>
 <div class="container">
 
@@ -64,8 +106,10 @@
 
 
 </div>
-<hr>
-<div class="container">
+<hr *ngIf="!disableTable">
+<button *ngIf="!disableTable" type="button" (click)="generateAndShowTable()">See table</button>
+
+<div *ngIf="showTable" class="container">
 
     <table class="table table-striped">
         <thead>
