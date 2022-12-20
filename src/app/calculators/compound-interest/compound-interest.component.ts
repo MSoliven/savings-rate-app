@@ -30,29 +30,32 @@ export class CompoundInterestComponent {
 
   inputForm: any = {};
 
-  public barChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    // We use these empty structures as placeholders for dynamic theming.
-    scales: {
-      x: {
-        stacked: true
-      },
-      y: {
-        min: 10
-      }
-    },
-    plugins: {
-      legend: {
-        display: true,
-      },
-      datalabels: {
-        // anchor: 'end',
-        // align: 'end',
-        display: false
-      }
-    },
-    maintainAspectRatio: false
-  };
+  public barChartOptions(minY: number): ChartConfiguration['options'] {
+    return {
+      responsive: true,
+      // We use these empty structures as placeholders for dynamic theming.
+      scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            min: minY
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+          },
+          datalabels: {
+            // anchor: 'end',
+            // align: 'end',
+            display: false
+          }
+        },
+      maintainAspectRatio: false
+      };
+  }
+
   public barChartType: ChartType = 'bar';
   public barChartPlugins = [
     DataLabelsPlugin
@@ -73,9 +76,12 @@ export class CompoundInterestComponent {
   public readOnly: boolean = false;
   public compact: boolean = false;
   public daysMode: boolean = false;
+
   public periodLabel: string = "Year";
   public periodContribLabel: string = "Monthly";
   public viewMode:string = "";
+  public minY: number = 0;
+  
   
 
   compoundFreqList = [
@@ -106,7 +112,8 @@ export class CompoundInterestComponent {
               let rate = paramsMap.params["rate"];
               let freq = paramsMap.params["freq"];
               let view = paramsMap.params["view"];
-
+              let neg = paramsMap.params["neg"];
+              
               this.onInitForm(initial, monthly, years, rate, freq, view);
               this.onChange(true);
             }
@@ -169,7 +176,7 @@ export class CompoundInterestComponent {
           monthly = "$100,000"; // daily
           freq = "1";
           rate = "0%";
-          break;       
+          break;
         default:
           this.readOnly = false;
           this.disableTable = false;
@@ -204,11 +211,13 @@ export class CompoundInterestComponent {
     let rate = FormatUtil.parseToNumber(input.interestRate);
     let freq = FormatUtil.parseToNumber(input.compoundFreq);
 
+
     this.barChartData.labels = this.calcLabels(input.yearsToGrow as number);
     this.barChartData.datasets = this.calcResultsets(principal, monthly, 
       years, rate, freq, input.viewMode);
-  
+    
     this.chart?.update();
+
     this.showTable = false;
   }
 
@@ -316,6 +325,13 @@ export class CompoundInterestComponent {
       }
 
       this.futureBalance = FormatUtil.formatNumber(balance);
+
+      if (balance < 0 || initialPrincipal < 0) {
+        this.minY = balance < initialPrincipal ? balance : initialPrincipal;
+      }
+      else {
+        this.minY = 0;
+      }
 
       return [{
         data: balances,

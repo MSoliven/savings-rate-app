@@ -6,11 +6,11 @@
         <br><br>
         <div class="card rounded bg-light">
             <div class="row mb-4 mt-4 ms-2">
-                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs h5">Initial investment:</label>
+                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs h5">Initial principal:</label>
                 <div class="col-sm-5">
-                    <choose-quantity id="initialPrincipal" tabindex="1" class="form-control-xs w-50" minValue="0" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
+                    <choose-quantity id="initialPrincipal" tabindex="1" class="form-control-xs w-50" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
                 </div>
-                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The amount of money you want to invest initially.</label>
+                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The amount of money you want to invest initially, or a negative number if you plan to borrow.</label>
             </div>
         </div>
         <hr>
@@ -20,7 +20,7 @@
                 <div class="col-sm-5">
                     <choose-quantity id="monthlyContribution" tabindex="2" class="form-control-xs w-50" increment="100" decimals="2" currency="$" formControlName="monthlyContribution" (change)="onChange()"></choose-quantity>
                 </div>
-                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The mount you plan to add to the principal monthly, or a negative number if you plan to withdraw.</label>
+                <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The amount you plan to add to the principal monthly, or a negative number if you plan to withdraw.</label>
             </div>
             <div class="row mb-4 ms-2">
                 <label for="yearsToGrow" class="col-sm-6 col-form-label-xs h5">Years to grow:</label>
@@ -104,7 +104,7 @@
     <div class="row mb-4" style="height: 400px">
         <canvas baseChart class="chart"
             [data]="barChartData"
-            [options]="barChartOptions"
+            [options]="barChartOptions(minY)"
             [plugins]="barChartPlugins"
             [type]="barChartType">
         </canvas>
