@@ -1,0 +1,56 @@
+<form [formGroup]="inputForm" (ngSubmit)="onSubmit()">
+    <h1>The "Millionaire Next Door" Calculator</h1>
+    <hr>
+    "Multiply your age times your realized pretax annual household income from all sources except inheritances. Divide by ten. This, less any inherited wealth, is what your net worth should be." - Dr. Thomas Stanley, author.
+    <br><br>
+    <div class="card rounded bg-light">
+        <div class="row mb-4 mt-4 ms-2">
+            <label for="age" class="col-sm-6 col-form-label-xs h5">Age:</label>
+            <div class="col-sm-6">
+                <choose-quantity id="age" tabindex="1" class="form-control-xs w-50" minValue="0" increment="1" decimals="0" formControlName="age"></choose-quantity>
+            </div>
+            <label for="age" class="col-sm-6 col-form-label-xs small"></label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="grossIncome" class="col-sm-6 col-form-label-xs h5">Annual wage and salary income:</label>
+            <div class="col-sm-6">
+                <choose-quantity id="grossIncome" tabindex="2" class="form-control-xs w-50" minValue="0" increment="1000" decimals="0" currency="$" formControlName="grossIncome"></choose-quantity>
+            </div>
+            <label for="grossIncome" class="col-sm-6 col-form-label-xs small">Enter your gross income.</label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="otherIncome" class="col-sm-6 col-form-label-xs h5">Interest and dividend income:</label>
+            <div class="col-sm-6">
+                <choose-quantity id="otherIncome" tabindex="3" class="form-control-xs w-50" minValue="0" increment="1000" decimals="0" currency="$" formControlName="otherIncome"></choose-quantity>
+            </div>
+            <label for="otherIncome" class="col-sm-6 col-form-label-xs small"></label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="inheritance" class="col-sm-6 col-form-label-xs h5">Inheritance:</label>
+            <div class="col-sm-6">
+                <choose-quantity id="inheritance" tabindex="4" class="form-control-xs w-50" minValue="0" increment="1000" decimals="0" formControlName="inheritance"></choose-quantity>
+            </div>
+            <label for="inheritance" class="col-sm-6 col-form-label-xs small"></label>
+        </div>
+    </div>
+</form>
+<hr>
+<div class="container">
+    
+    <div class="row">
+        <div class="col-md-12 mx-auto">
+            <h4>Your are a (PAW) Prodigious Accumulator of Wealth.</h4>
+        </div>
+    </div>
+
+    <div class="row mb-4" style="height: 400px">
+        <canvas baseChart class="chart"
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [plugins]="barChartPlugins"
+            [type]="barChartType">
+        </canvas>
+    </div>
+
+
+</div>

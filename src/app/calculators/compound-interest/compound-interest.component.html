@@ -1,5 +1,5 @@
 <form [formGroup]="inputForm" (ngSubmit)="onChange()">
-    <div  *ngIf="!readOnly">
+    <div  *ngIf="!compact">
         <h1>Compound Interest Calculator</h1>
         <hr>
         Adjust any of the parameters below and observe how it affects your savings over time.
@@ -7,7 +7,7 @@
         <div class="card rounded bg-light">
             <div class="row mb-4 mt-4 ms-2">
                 <label for="initialPrincipal" class="col-sm-6 col-form-label-xs h5">Initial investment:</label>
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <choose-quantity id="initialPrincipal" tabindex="1" class="form-control-xs w-50" minValue="0" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
                 </div>
                 <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The amount of money you want to invest initially.</label>
@@ -16,15 +16,15 @@
         <hr>
         <div class="card rounded bg-light">
             <div class="row mb-4 mt-4 ms-2">
-                <label for="monthlyContribution" class="col-sm-6 col-form-label-xs h5">Monthly contribution:</label>
-                <div class="col-sm-6">
+                <label for="monthlyContribution" class="col-sm-6 col-form-label-xs h5">{{ periodContribLabel }} contribution:</label>
+                <div class="col-sm-5">
                     <choose-quantity id="monthlyContribution" tabindex="2" class="form-control-xs w-50" increment="100" decimals="2" currency="$" formControlName="monthlyContribution" (change)="onChange()"></choose-quantity>
                 </div>
                 <label for="initialPrincipal" class="col-sm-6 col-form-label-xs small">The mount you plan to add to the principal monthly, or a negative number if you plan to withdraw.</label>
             </div>
             <div class="row mb-4 ms-2">
                 <label for="yearsToGrow" class="col-sm-6 col-form-label-xs h5">Years to grow:</label>
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <choose-quantity id="yearsToGrow" tabindex="3" class="form-control-xs w-50" minValue="0" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
                 </div>
                 <label for="yearsToGrow" class="col-sm-6 col-form-label-xs small">The number of years you plan to save.</label>
@@ -34,12 +34,12 @@
         <div class="card rounded bg-light">
             <div class="row mb-4 mt-4 ms-2">
                 <label for="interestRate" class="col-sm-6 col-form-label-xs h5">Interest rate:</label>
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <choose-quantity id="interestRate" tabindex="4" class="form-control-xs w-50" minValue="0" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
                 </div>
                 <label for="interestRate" class="col-sm-6 col-form-label-xs small">Estimated annual interest rate. Historically, the stock market has returned over 10%.</label>
             </div>
-            <div class="row mb-4 ms-2">
+            <div  *ngIf="showCompoundFreq" class="row mb-4 ms-2">
                 <label for="compoundFreq" class="col-sm-6 col-form-label-xs h5">Compound frequency: </label>
                 <div class="col-sm-6">
                     <select tabindex="5" class="form-control-xs ms-n6" style="height: 32px; margin-left: -11px" formControlName="compoundFreq"  (change)="onChange()">
@@ -51,44 +51,50 @@
             </div>
         </div>
     </div>
-    <div  *ngIf="readOnly">
+    <div *ngIf="compact">
+        <div *ngIf="periodLabel === 'Day'" class="row mb-2 mt-4 ms-2">
+            <div class="col-sm-6 h5">
+                <input type="radio" id="option1" name="viewMode" value="hundredgrandaday" formControlName="viewMode"  (change)="onChange()"/>
+                <label class="ms-2 me-4" for="option1">Option 1</label>
+                <input class="ms-6" type="radio" id="option2" name="viewMode" value="doubledpenny" formControlName="viewMode"  (change)="onChange()"/>
+                <label class="ms-2" for="option2">Option 2</label>
+            </div>
+            <hr>
+        </div>
         <div class="row mb-2 mt-4 ms-2">
             <label for="initialPrincipal" class="col-sm-3 col-form-label-xs h6">Initial investment:</label>
             <div class="col-sm-3">
-                <choose-quantity id="initialPrincipal" isReadOnly="true" tabindex="1" class="form-control-xs w-50" minValue="0" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
+                <choose-quantity id="initialPrincipal" isReadOnly="{{ readOnly }}" tabindex="1" class="form-control-xs w-50" minValue="0" increment="1000" decimals="2" currency="$" formControlName="initialPrincipal" (change)="onChange()"></choose-quantity>
             </div>
-            <label for="monthlyContribution" class="col-sm-3 col-form-label-xs h6">Monthly contribution:</label>
+            <label for="monthlyContribution" class="col-sm-3 col-form-label-xs h6">{{ periodContribLabel }} contribution:</label>
             <div class="col-sm-3">
-                <choose-quantity id="monthlyContribution" isReadOnly="true" tabindex="2" class="form-control-xs w-50" increment="100" decimals="2" currency="$" formControlName="monthlyContribution" (change)="onChange()"></choose-quantity>
+                <choose-quantity id="monthlyContribution" isReadOnly="{{ readOnly }}" tabindex="2" class="form-control-xs w-50" increment="100" decimals="2" currency="$" formControlName="monthlyContribution" (change)="onChange()"></choose-quantity>
             </div>
         </div>
         <div class="row mb-2 ms-2">
-            <label for="yearsToGrow" class="col-sm-3 col-form-label-xs h6">Years to grow:</label>
+            <label for="yearsToGrow" class="col-sm-3 col-form-label-xs h6">{{ periodLabel }}s to grow:</label>
             <div class="col-sm-3">
-                <choose-quantity id="yearsToGrow" isReadOnly="true" tabindex="3" class="form-control-xs w-50" minValue="0" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
+                <choose-quantity id="yearsToGrow" isReadOnly="{{ readOnly }}" tabindex="3" class="form-control-xs w-50" minValue="0" increment="2" decimals="0" formControlName="yearsToGrow" (change)="onChange()"></choose-quantity>
             </div>
             <label for="interestRate" class="col-sm-3 col-form-label-xs h6">Interest rate:</label>
             <div class="col-sm-3">
-                <choose-quantity id="interestRate" isReadOnly="true" tabindex="4" class="form-control-xs w-50" minValue="0" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
+                <choose-quantity id="interestRate" isReadOnly="{{ readOnly }}" tabindex="4" class="form-control-xs w-50" minValue="0" increment=".1" decimals="2" formControlName="interestRate" (change)="onChange()"></choose-quantity>
             </div>
         </div>
-        <div class="row mb-2 ms-2">
+        <div *ngIf="showCompoundFreq" [ngClass]="!readOnly ? 'row mb-2 mt-4 ms-2' : 'row mb-2 ms-2'">
             <label for="compoundFreq" class="col-sm-3 col-form-label-xs h6">Compound frequency: </label>
             <div class="col-sm-3">
-                {{ getCompoundFreqDesc(inputForm.value.compoundFreq) }}
+                <span *ngIf="readOnly">{{ getCompoundFreqDesc(inputForm.value.compoundFreq) }}</span>
+                <select *ngIf="!readOnly" tabindex="5" class="form-control-xs ms-n6" style="height: 32px; margin-left: -11px" formControlName="compoundFreq"  (change)="onChange()">
+                    <option [ngValue]="null" disabled>Select frequency</option>
+                    <option *ngFor="let freq of compoundFreqList" [ngValue]="freq.id">{{freq.name}}</option>
+                </select>
             </div>
         </div>
     </div>
 </form>
 <hr>
 <div class="container">
-
-
-    <!--p>Form Value: {{ inputForm.value | json }}</p>
-    
-    <p>Form Status: {{ inputForm.status }}</p-->
-
-
     <div class="row">
         <div class="col-md-12 mx-auto">
             <h4>Your future balance is {{ futureBalance }}.</h4>
@@ -104,26 +110,25 @@
         </canvas>
     </div>
 
-
-</div>
-<hr *ngIf="!disableTable">
-<button *ngIf="!disableTable" type="button" (click)="generateAndShowTable()">See table</button>
-
-<div *ngIf="showTable" class="container">
-
-    <table class="table table-striped">
-        <thead>
-        <tr>           
-            <th>Years</th>
-            <th>Future Value ({{ inputForm.value.interestRate }}%)</th>
-            <th>Total Contributions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let row of tableDataRows">           
-            <td *ngFor="let col of row | key">{{row[col]}}</td>
-        </tr>
-        </tbody>
-    </table>
-
+    <hr *ngIf="!disableTable">
+    <button *ngIf="!disableTable" type="button" (click)="generateAndShowTable()">See table</button>
+    
+    <div *ngIf="showTable">
+    
+        <table class="table table-striped">
+            <thead>
+            <tr>           
+                <th>Years</th>
+                <th>Future Value ({{ inputForm.value.interestRate }}%)</th>
+                <th>Total Contributions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let row of tableDataRows">           
+                <td *ngFor="let col of row | key">{{row[col]}}</td>
+            </tr>
+            </tbody>
+        </table>
+    
+    </div>
 </div>
