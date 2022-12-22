@@ -52,12 +52,21 @@
         </div>
     </div>
     <div *ngIf="compact">
-        <div *ngIf="periodLabel === 'Day'" class="row mb-2 mt-4 ms-2">
+        <div *ngIf="viewMode === 'hundredgrandaday' || viewMode === 'doubledpenny'" class="row mb-2 mt-4 ms-2">
             <div class="col-sm-6 h5">
                 <input type="radio" id="option1" name="viewMode" value="hundredgrandaday" formControlName="viewMode"  (change)="onChange()"/>
                 <label class="ms-2 me-4" for="option1">Option 1</label>
                 <input class="ms-6" type="radio" id="option2" name="viewMode" value="doubledpenny" formControlName="viewMode"  (change)="onChange()"/>
                 <label class="ms-2" for="option2">Option 2</label>
+            </div>
+            <hr>
+        </div>
+        <div *ngIf="viewMode === 'jane' || viewMode === 'joe'" class="row mb-2 mt-4 ms-2">
+            <div class="col-sm-6 h5">
+                <input type="radio" id="option1" name="viewMode" value="jane" formControlName="viewMode"  (change)="onChange()"/>
+                <label class="ms-2 me-4" for="option1">Early Jane</label>
+                <input class="ms-6" type="radio" id="option2" name="viewMode" value="joe" formControlName="viewMode"  (change)="onChange()"/>
+                <label class="ms-2" for="option2">Procrastinator Joe</label>
             </div>
             <hr>
         </div>

@@ -81,6 +81,9 @@ export class CompoundInterestComponent {
   public periodContribLabel: string = "Monthly";
   public viewMode:string = "";
   public minY: number = 0;
+  public contribStart: number = 1;
+  public contribEnd: number = 999;
+
   
   
 
@@ -112,7 +115,6 @@ export class CompoundInterestComponent {
               let rate = paramsMap.params["rate"];
               let freq = paramsMap.params["freq"];
               let view = paramsMap.params["view"];
-              let neg = paramsMap.params["neg"];
               
               this.onInitForm(initial, monthly, years, rate, freq, view);
               this.onChange(true);
@@ -176,6 +178,32 @@ export class CompoundInterestComponent {
           monthly = "$100,000"; // daily
           freq = "1";
           rate = "0%";
+          break;
+        case "jane":
+          this.readOnly = true;
+          this.compact = true;
+          this.showCompoundFreq = false;
+          this.disableTable = true;
+          this.contribStart = 1;
+          this.contribEnd = 120;
+          initial = "$0.00";
+          monthly = "$500.00";
+          freq = "1";
+          rate = "8%";
+          years = "40";
+          break;
+        case "joe":
+          this.readOnly = true;
+          this.compact = true;
+          this.showCompoundFreq = false;
+          this.disableTable = true;
+          this.contribStart = 120;
+          this.contribEnd = 999;
+          initial = "$0.00";
+          monthly = "$500.00";
+          freq = "1";
+          rate = "8%";
+          years = "40";
           break;
         default:
           this.readOnly = false;
@@ -252,6 +280,8 @@ export class CompoundInterestComponent {
       let contribs: number = 0;
       let dailyPeriod: boolean = (viewmode === "doubledpenny" || viewmode === "hundredgrandaday");
       let actualPeriods = !dailyPeriod ? (numberOfPeriods * 12) : numberOfPeriods; // monthly or daily
+      let start: number = this.contribStart;
+      let end: number = this.contribEnd;
 
 
       const calcGrowth = (balance: number, compoundRate: number): number => {
@@ -270,7 +300,8 @@ export class CompoundInterestComponent {
           contributions.push(totalContribs);
         }
         else {
-          contribs += regularContribs;
+          if (start <= i && i <= end) 
+            contribs += regularContribs;
           switch(compoundFreq) {
             case 360:
               growth = calcGrowth2(balance, (1/12), rate, 360);
