@@ -5,7 +5,8 @@ export class FormatUtil {
         return num;
     }
 
-    static formatNumber(num: number): string {
-        return "$" + num.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    static formatNumber(num: number, dec?: number): string {
+        var digits = !dec && dec != 0 ? 2 : dec;
+        return "$" + num.toLocaleString("en-US", {minimumFractionDigits: digits, maximumFractionDigits: digits});
     }
 }

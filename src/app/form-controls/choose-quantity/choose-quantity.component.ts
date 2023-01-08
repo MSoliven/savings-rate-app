@@ -23,6 +23,7 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
 
   quantityStr: string = "$";
   readOnly: boolean = false;
+  disabled: boolean = false;
 
   @Input()
   increment: string = "1";
@@ -42,8 +43,12 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
   @Input()
   isReadOnly: string = "false";
 
+  @Input()
+  isDisabled: string = "false";
+
   ngOnInit(): void {
     this.readOnly = this.isReadOnly === "true";
+    this.disabled = this.isDisabled === "true";
   }
 
   changeInput(e: any) {
@@ -58,8 +63,6 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
   onTouched = () => {};
 
   touched = false;
-
-  disabled = false;
 
   onAdd() {
     this.markAsTouched();
@@ -98,10 +101,6 @@ export class ChooseQuantityComponent implements ControlValueAccessor, Validator 
       this.onTouched();
       this.touched = true;
     }
-  }
-
-  setDisabledState(disabled: boolean) {
-    this.disabled = disabled;
   }
 
   parseToNumber(quantityStr: string): number {

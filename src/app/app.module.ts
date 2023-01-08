@@ -11,6 +11,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ChooseQuantityComponent } from './form-controls/choose-quantity/choose-quantity.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
 import { MillionaireNextDoorComponent } from './calculators/millionaire-next-door/millionaire-next-door.component';
+import { BaseComponent } from './base/base.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { MillionaireNextDoorComponent } from './calculators/millionaire-next-doo
     KeyPipe,
     ChooseQuantityComponent,
     OnlyNumberDirective,
-    MillionaireNextDoorComponent
+    MillionaireNextDoorComponent,
+    BaseComponent
   ],
   imports: [
     BrowserModule,

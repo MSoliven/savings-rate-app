@@ -1,14 +1,11 @@
-
-import { Component, Inject, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
-import { Chart, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
-import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { CurrencyPipe } from '@angular/common';
-import { trigger } from '@angular/animations';
 import { FormatUtil } from '../../formatutil';
+import { BaseComponent } from 'src/app/base/base.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-millionaire-next-door',
@@ -16,82 +13,66 @@ import { FormatUtil } from '../../formatutil';
   styleUrls: ['./millionaire-next-door.component.scss']
 })
 
-export class MillionaireNextDoorComponent {
+export class MillionaireNextDoorComponent extends BaseComponent implements OnInit {
 
   inputForm: any = {};
 
-  public barChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    // We use these empty structures as placeholders for dynamic theming.
-    scales: {
-      x: {
-        stacked: true
-      },
-      y: {
-        min: 10
-      }
-    },
-    plugins: {
-      legend: {
-        display: true,
-      },
-      datalabels: {
-        // anchor: 'end',
-        // align: 'end',
-        display: false
-      }
-    },
-    maintainAspectRatio: false
-  };
-  public barChartType: ChartType = 'bar';
-  public barChartPlugins = [
-    DataLabelsPlugin
-  ];
+  public uawNetWorthStr: string = "";
+  public aawNetWorthStr: string = "";
+  public pawNetWorthStr: string = "";
+  public resultsAvailable: boolean = false;
 
-  public barChartData: ChartData<'bar'> = {
-    labels: [],
-    datasets: [
-      { data: [], label: 'Growth' }
-    ]
-  };
-
-  public formattedAmount: string = "";
-  public expectedNetWorth: number = 0;
-  public uawNetWorthCeiling: number = 0;
-  public aawNetWorthCeiling: number = 0;
   
-  constructor(private currencyPipe: CurrencyPipe, private fb: FormBuilder) { }
+  constructor(public override router: Router, public override route: ActivatedRoute, private fb: FormBuilder) {
+    super(router, route);
+  }
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+
+    this.inputForm = this.fb.group({
+      age: ["30", Validators.required],
+      grossIncome: ["$0"],
+      otherIncome: ["$0"],
+      inheritance: ["$0"],
+      uawNetWorth: [""],
+      aawNetWorth: [""],
+      pawNetWorth: [""]
+    });
+
+    //this.inputForm.controls.age.enable()
+  }
 
   calcExpectedNetWorth(age: number, income: number, inheritance: number): number {
     return (age * income / 10) - inheritance;
   }
 
   onSubmit() {
+
     // TODO: Use EventEmitter with form value
     console.warn(this.inputForm.value);
-    let input = this.inputForm.value;
-    let age = FormatUtil.parseToNumber(input.age);
-    let grossIncome = FormatUtil.parseToNumber(input.grossIncome);
-    let otherIncome = FormatUtil.parseToNumber(input.otherIncome);
-    let inheritance = FormatUtil.parseToNumber(input.inheritance);
-    let freq = FormatUtil.parseToNumber(input.compoundFreq);
 
-    this.expectedNetWorth = this.calcExpectedNetWorth(age, grossIncome+otherIncome, inheritance);
+    if (!this.resultsAvailable) {
+      let input = this.inputForm.value;
+      let age = FormatUtil.parseToNumber(input.age);
+      let grossIncome = FormatUtil.parseToNumber(input.grossIncome);
+      let otherIncome = FormatUtil.parseToNumber(input.otherIncome);
+      let inheritance = FormatUtil.parseToNumber(input.inheritance);
 
-    //this.barChartData.labels = this.calcLabels(input.yearsToGrow as number);
-    this.barChartData.datasets = this.calcResultsets(this.expectedNetWorth); 
-    //years, rate, freq);
+      var aawNetWorth = Math.round(this.calcExpectedNetWorth(age, grossIncome+otherIncome, inheritance));
+      var uawNetWorth = Math.round(aawNetWorth / 2);
+      var pawNetWorth = Math.round(aawNetWorth * 2);
 
-    //this.chart?.update();
-  }
+      this.uawNetWorthStr = FormatUtil.formatNumber(uawNetWorth, 0);
+      this.aawNetWorthStr = FormatUtil.formatNumber(aawNetWorth, 0);
+      this.pawNetWorthStr = FormatUtil.formatNumber(pawNetWorth, 0)
 
-  calcResultsets(expectedNetWorth: number): any {
+    }
+    else {
+      this.ngOnInit();
+    }
 
-      const calcGrowth = (balance: number, compoundRate: number): number => {
-        return balance * compoundRate;
-      };
-
-      return [{}];
+    this.resultsAvailable = !this.resultsAvailable;
   }
 
 }

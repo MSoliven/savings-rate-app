@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { NavigationEnd, Router, ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { Chart, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'cha
 import { BaseChartDirective } from 'ng2-charts';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { FormatUtil } from '../../formatutil';
+import { BaseComponent } from 'src/app/base/base.component';
 
 class TableDataRow {
   public year: string;
@@ -25,7 +26,7 @@ class TableDataRow {
   templateUrl: './compound-interest.component.html',
   styleUrls: ['./compound-interest.component.scss']
 })
-export class CompoundInterestComponent {
+export class CompoundInterestComponent extends BaseComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   inputForm: any = {};
@@ -73,8 +74,6 @@ export class CompoundInterestComponent {
   public disableTable: boolean = false;
   public showCompoundFreq: boolean = true;
 
-  public readOnly: boolean = false;
-  public compact: boolean = false;
   public daysMode: boolean = false;
 
   public periodLabel: string = "Year";
@@ -83,9 +82,6 @@ export class CompoundInterestComponent {
   public minY: number = 0;
   public contribStart: number = 1;
   public contribEnd: number = 999;
-
-  
-  
 
   compoundFreqList = [
     { id: "1", name: "Annually" },
@@ -99,33 +95,30 @@ export class CompoundInterestComponent {
   public futureBalance: string = "$0.00";
   public formattedAmount: string = "";
   
-  constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder) { }
-
-  ngOnInit(): void {
-
-    this.router.events.subscribe(
-      (event: any) => {
-        if (event instanceof NavigationEnd) {
-          this.route.queryParamMap
-            .subscribe((paramsMap: any) => {
-
-              let initial = paramsMap.params["initial"];
-              let monthly = paramsMap.params["monthly"];
-              let years = paramsMap.params["years"];
-              let rate = paramsMap.params["rate"];
-              let freq = paramsMap.params["freq"];
-              let view = paramsMap.params["view"];
-              
-              this.onInitForm(initial, monthly, years, rate, freq, view);
-              this.onChange(true);
-            }
-        );
-        }
-      }
-    );
+  constructor(public override router: Router, public override route: ActivatedRoute, private fb: FormBuilder) { 
+    super(router, route);
   }
 
-  onInitForm(initial: string, monthly: string, years: string, 
+  override ngOnInit(): void {
+
+    this.route.queryParams
+      .subscribe(params => {
+        let initial = params["initial"] as string;
+        let monthly = params["monthly"] as string;
+        let years = params["years"] as string;
+        let rate = params["rate"] as string;
+        let freq = params["freq"] as string;
+        let view = params["view"] as string;
+        
+        this.onInitForm(initial, monthly, years, rate, freq, view);
+        this.onChange(true);
+      }
+    );
+
+
+  }
+
+ onInitForm(initial: string, monthly: string, years: string, 
     rate: string, freq: string, view: string) {
 
     const getValue = (val: string, def: any) => {
