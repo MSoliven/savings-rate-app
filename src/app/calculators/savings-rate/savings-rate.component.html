@@ -1,0 +1,49 @@
+<div class="container">
+<form [formGroup]="inputForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="!compact">
+    <h1>Savings Rate Calculator</h1>
+    <hr>
+        <p>
+           Along with your net worth and spending, your savings rate is one of the most valuable tools you can use to track your progress. It’s particularly handy in predicting how long it will take you to become financially independent.</p>
+        <p>
+        <p>
+           Follow this link to read more about <a href="https://www.millionairebefore50.com/how-to-calculate-your-savings-rate-the-right-way/">how I calculate your savings rate</a>.
+        </p>
+    </div>
+    <div class="card rounded bg-light">
+        <div class="row mb-4 ms-2 mt-4">
+            <label for="preTaxSavings" class="col-sm-4 col-form-label-xs"><strong>Pre-tax savings:</strong></label>
+            <div class="col-sm-3">
+                <input id="preTaxSavings" tabindex="2" class="form-control-xs w-75" (change)="formatCurrency($event)" onlyNumber="true" formControlName="preTaxSavings">
+            </div>
+            <label for="grossIncome" class="col-sm-5 col-form-label-xs">(e.g., 401K, 403B, HSA contributions, plus employer matches)</label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="afterTaxSavings" class="col-sm-4 col-form-label-xs"><strong>After-tax savings:</strong></label>
+            <div class="col-sm-3">
+                <input id="afterTaxSavings" tabindex="3" class="form-control-xs w-75" (change)="formatCurrency($event)" onlyNumber="true" formControlName="afterTaxSavings">
+            </div>
+            <label for="otherIncome" class="col-sm-5 col-form-label-xs">(e.g., Roth IRA, Roth 401K, 529, and brokerage contributions)</label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="takeHomePay" class="col-sm-4 col-form-label-xs"><strong>Take-home pay:</strong></label>
+            <div class="col-sm-3">
+                <input id="takeHomePay" tabindex="4" class="form-control-xs w-75" (change)="formatCurrency($event)" onlyNumber="true" formControlName="takeHomePay">
+            </div>
+            <label for="takeHomePay" class="col-sm-5 col-form-label-xs">(Paychecks, side hustles, and others)</label>
+        </div>
+    </div>
+</form>
+<hr>
+<div class="row">
+    <div class="col-sm-12 text-center">
+        <button mat-button mat-raised-button color="primary" class="w-100" (click)="onSubmit()">{{ !resultsAvailable ? "Calculate" : "Reset" }}</button>
+    </div>
+</div>
+<div *ngIf="resultsAvailable">
+<hr>
+<div class="card rounded bg-light text-center">
+    <div class="h2 mt-4 mb-4">Your savings rate is {{ savingsRateStr }}</div>
+</div>
+</div>
+</div>

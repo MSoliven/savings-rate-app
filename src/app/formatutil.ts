@@ -9,4 +9,9 @@ export class FormatUtil {
         var digits = !dec && dec != 0 ? 2 : dec;
         return "$" + num.toLocaleString("en-US", {minimumFractionDigits: digits, maximumFractionDigits: digits});
     }
+
+    static formatPercentage(num: number, dec?: number): string {
+        var digits = !dec && dec != 0 ? 2 : dec;
+        return num.toLocaleString("en-US", {minimumFractionDigits: digits, maximumFractionDigits: digits}) + "%";
+    }
 }

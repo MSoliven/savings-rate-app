@@ -1,0 +1,84 @@
+<div class="container">
+<form [formGroup]="inputForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="!compact">
+    <h1>"The SavingsRate Next Door" Calculator</h1>
+    <hr>
+        <p>
+        In his book, The SavingsRate Next Door (published 1996), best-selling author, Dr. Thomas J. Stanley, wrote about a formula you can use to calculate your expected net worth: 
+        </p>
+        <p>
+        <strong>"Multiply your age times your realized pretax annual household income from all sources except inheritances. Divide by ten. This, less any inherited wealth, is what your net worth should be."</strong>
+        </p>
+        <p>
+        Given your age and income, how does your net worth match up? If you are in the top quartile for wealth accumulation, you are a PAW, or prodigious accumulator of wealth. If you are in the bottom quartile, you are a UAW, or under accumulator of wealth.
+        </p>
+    </div>
+    <div class="card rounded bg-light">
+        <div class="row mb-4 mt-4 ms-2">
+            <label for="age" class="col-sm-4 col-form-label-xs"><strong>Age:</strong></label>
+            <div class="col-sm-4">
+                <input id="age" tabindex="1" class="form-control-xs w-75" (change)="formatCurrency($event)" onlyNumber="true" formControlName="age">
+            </div>
+            <label for="age" class="col-sm-4 col-form-label-xs">Enter your age.</label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="grossIncome" class="col-sm-4 col-form-label-xs"><strong>Annual wage and salary income:</strong></label>
+            <div class="col-sm-4">
+                <input id="grossIncome" tabindex="2" class="form-control-xs w-75" (change)="formatCurrency($event)" onlyNumber="true" formControlName="grossIncome">
+            </div>
+            <label for="grossIncome" class="col-sm-4 col-form-label-xs">Enter your gross income.</label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="otherIncome" class="col-sm-4 col-form-label-xs"><strong>Interest and dividend income:</strong></label>
+            <div class="col-sm-4">
+                <input id="otherIncome" tabindex="3" class="form-control-xs w-75" (change)="formatCurrency($event)" onlyNumber="true" formControlName="otherIncome">
+            </div>
+            <label for="otherIncome" class="col-sm-4 col-form-label-xs">Enter any other income you are receiving.</label>
+        </div>
+        <div class="row mb-4 ms-2">
+            <label for="inheritance" class="col-sm-4 col-form-label-xs"><strong>Inheritance:</strong></label>
+            <div class="col-sm-4">
+                <input id="inheritance" tabindex="4" class="form-control-xs w-75" (change)="formatCurrency($event)" onlyNumber="true" formControlName="inheritance">
+            </div>
+            <label for="inheritance" class="col-sm-4 col-form-label-xs">Enter the value of all inheritances you received.</label>
+        </div>
+        <div class="row mb-4 ms-2">
+
+        </div>
+    </div>
+</form>
+<hr>
+<div class="row">
+    <div class="col-sm-12 text-center">
+        <button mat-button mat-raised-button color="primary" class="w-100" (click)="onSubmit()">{{ !resultsAvailable ? "Calculate" : "Reset" }}</button>
+    </div>
+</div>
+<div *ngIf="resultsAvailable">
+<hr>
+<div class="card rounded bg-light">
+    <div class="row mb-4">
+        <div class="row mb-4 mt-4 ms-2">
+            <div class="col-sm-4 col-form-label-xs">If your Net Worth is less than</div>
+            <div class="col-sm-4">  
+                <input id="uawNetWorthStr" class="form-control-xs w-75" [value]="uawNetWorthStr" readonly>
+            </div>
+            <div class="col-sm-4 col-form-label-xs">you are a&nbsp; <strong>(UAW)</strong> under accumulator of wealth.</div>
+        </div>
+        <div class="row mb-4 ms-2">
+            <div class="col-sm-4 col-form-label-xs">If your Net Worth is about equal to</div>
+            <div class="col-sm-4">
+                <input id="aawNetWorthStr" class="form-control-xs w-75" [value]="aawNetWorthStr" readonly>
+            </div>
+            <div class="col-sm-4 col-form-label-xs">you are an <strong>(AAW)</strong> average accumulator of wealth--- not bad!</div>
+        </div>
+        <div class="row mb-4 ms-2">
+            <div class="col-sm-4 col-form-label-xs">If your Net Worth is more than</div>
+            <div class="col-sm-4">
+                <input id="pawNetWorthStr" tabindex="3" class="form-control-xs w-75" [value]="pawNetWorthStr" readonly>
+            </div>
+            <div class="col-sm-4 col-form-label-xs">you are a&nbsp; <strong>(PAW)</strong> prodigious accumulator of wealth. Totally awesome!!</div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
